@@ -4,35 +4,37 @@
 <meta charset="UTF-8">
 <title>Login</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <style>
-body {
+body{
     font-family: Arial;
-    background: #f4f4f4;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    background:#f4f4f4;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
 }
-.login-box {
-    background: white;
-    padding: 30px;
-    border-radius: 10px;
-    width: 300px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    text-align: center;
+.login-box{
+    background:white;
+    padding:30px;
+    border-radius:10px;
+    width:300px;
+    box-shadow:0 4px 10px rgba(0,0,0,0.2);
+    text-align:center;
 }
-input, button {
-    width: 100%;
-    padding: 10px;
-    margin-top: 10px;
+input,button{
+    width:100%;
+    padding:10px;
+    margin-top:10px;
 }
-button {
-    background: #3498db;
-    color: white;
-    border: none;
-    cursor: pointer;
+button{
+    background:#3498db;
+    color:white;
+    border:none;
+    cursor:pointer;
 }
 </style>
+
 </head>
 <body>
 
@@ -45,9 +47,11 @@ button {
 </div>
 
 <script type="module">
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
+/* ===== FIREBASE CONFIG ===== */
 const firebaseConfig = {
   apiKey: "API_KEY_CUA_NHOM11_7579D",
   authDomain: "nhom11-7579d.firebaseapp.com",
@@ -56,34 +60,58 @@ const firebaseConfig = {
   storageBucket: "nhom11-7579d.appspot.com",
   messagingSenderId: "MESSAGING_ID_CUA_NHOM11",
   appId: "APP_ID_CUA_NHOM11"
-};;
+};
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-function hash(pw) {
+/* ===== HASH PASSWORD ===== */
+function hash(pw){
     return btoa(pw);
 }
 
-window.login = async () => {
-    const user = username.value.trim();
-    const pass = password.value;
+/* ===== LOGIN FUNCTION ===== */
+window.login = async function(){
 
-    const snap = await get(ref(db, `users/${user}`));
+    const user = document.getElementById("username").value.trim().toLowerCase();
+    const pass = document.getElementById("password").value;
+    const msg  = document.getElementById("msg");
 
-    if (!snap.exists()) {
-        msg.innerText = "Sai tài khoản";
+    msg.innerText = "";
+
+    if(!user || !pass){
+        msg.innerText = "Nhập đầy đủ thông tin";
         return;
     }
 
-    if (snap.val().password === hash(pass)) {
-        localStorage.setItem("login", "ok");
-        localStorage.setItem("user", user);
-        window.location.href = "index.html";
-    } else {
-        msg.innerText = "Sai mật khẩu";
+    try{
+
+        const snap = await get(ref(db, "users/" + user));
+
+        if(!snap.exists()){
+            msg.innerText = "Sai tài khoản";
+            return;
+        }
+
+        const dbPass = snap.val().password;
+
+        if(dbPass === hash(pass)){
+            localStorage.setItem("login","ok");
+            localStorage.setItem("user",user);
+            window.location.href = "index.html";
+        }
+        else{
+            msg.innerText = "Sai mật khẩu";
+        }
+
+    }catch(err){
+        console.error(err);
+        msg.innerText = "Lỗi kết nối Firebase";
     }
-};
+
+}
+
 </script>
+
 </body>
 </html>
