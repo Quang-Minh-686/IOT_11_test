@@ -42,6 +42,7 @@
                 <button class="btn on" onclick="setPump(1)">Bật Bơm</button>
                 <button class="btn off" onclick="setPump(0)">Tắt Bơm</button>
             </div>
+			<button class="btn off" onclick="resetHistory()">Reset bảng cây</button>
         </div>
     </div>
 
@@ -188,6 +189,26 @@
         window.setPump = (status) => {
             set(ref(db, 'pump/status'), status);
         }
+
+		// LED trạng thái máy bơm (đồng bộ Firebase + Wokwi)
+onValue(ref(db, 'pump/status'), (snapshot) => {
+    const status = snapshot.val();
+    const led = document.getElementById('pumpLed');
+
+    if (status === 1) {
+        led.style.background = 'limegreen';
+    } else {
+        led.style.background = 'red';
+    }
+});
+
+// Reset lịch sử cảm biến (reset bảng cây)
+window.resetHistory = () => {
+    if (confirm("Reset toàn bộ dữ liệu lịch sử?")) {
+        set(ref(db, 'sensor_history'), null);
+    }
+};
+		
     </script>
 </body>
 </html>
