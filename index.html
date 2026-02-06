@@ -60,6 +60,9 @@
     </div>
 
     <script type="module">
+		if (localStorage.getItem("login") !== "ok") {
+    		window.location.replace("login.html");
+		}
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, onValue, set, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
