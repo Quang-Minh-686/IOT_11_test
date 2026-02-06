@@ -44,7 +44,12 @@
     <p id="msg" style="color:red;"></p>
 </div>
 
+<button class="btn off" onclick="logout()">Logout</button>
+
 <script type="module">
+if (localStorage.getItem("login") !== "ok") {
+    window.location.href = "login.html";
+}
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
@@ -86,6 +91,10 @@ window.login = async () => {
     }
 };
 </script>
-
+window.logout = () => {
+    localStorage.removeItem("login");
+    localStorage.removeItem("user");
+    window.location.href = "login.html";
+};
 </body>
 </html>
