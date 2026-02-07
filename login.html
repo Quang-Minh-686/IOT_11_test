@@ -45,6 +45,7 @@ button{
     <button onclick="login()">Đăng nhập</button>
     <p id="msg" style="color:red;"></p>
 </div>
+<button onclick="logout()">Logout</button>
 
 <script type="module">
 
@@ -111,6 +112,13 @@ window.login = async function(){
 
 }
 
+    window.logout = () => {
+    localStorage.removeItem("login");
+    localStorage.removeItem("user");
+    window.location.href = "login.html";
+    }
+
+    
 </script>
 
 </body>
